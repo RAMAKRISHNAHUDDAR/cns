@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-The Password Security Analyzer is a Python-based project developed for the Cryptography and Network Security (CNS) subject.
+The Password Security Analyzer is a Python-based project developed for the Cryptography and Network Security (CNS).
 
 It helps users understand password security by analyzing passwords, generating strong passwords, simulating password attacks, and demonstrating password hashing.
 
