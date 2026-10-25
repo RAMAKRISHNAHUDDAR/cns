@@ -1,6 +1,7 @@
-
 """Interactive command-line interface for the CNS password security project."""
 
+from modules.analyzer import analyze_password
+from modules.recommendations import generate_recommendations
 from modules.generator import generate_password
 from modules.hashing_lab import (
     benchmark_hashing,
@@ -17,6 +18,7 @@ def show_menu() -> None:
     print("3. Run an exhaustive-search simulation")
     print("4. Demonstrate Argon2id hashing")
     print("5. Compare SHA-256 and Argon2id performance")
+    print("6. Analyze password security and get recommendations")
     print("0. Exit")
 
 
@@ -160,6 +162,7 @@ def main() -> None:
         "3": exhaustive_search_menu,
         "4": argon2id_menu,
         "5": hashing_benchmark_menu,
+        "6": analyze_password_menu,
     }
 
     while True:
@@ -174,7 +177,7 @@ def main() -> None:
             action = actions.get(choice)
 
             if action is None:
-                print("Invalid option. Please select 0 through 5.")
+                print("Invalid option. Please select 0 through 6.")
                 continue
 
             try:
@@ -187,6 +190,38 @@ def main() -> None:
         except (EOFError, KeyboardInterrupt):
             print("\nExiting CNS Password Security Toolkit.")
             break
+
+def analyze_password_menu() -> None:
+    """Analyze a password and display actionable recommendations."""
+    password = input(
+        "Enter a password to analyze (not stored by this application): "
+    )
+
+    if not password:
+        print("Password cannot be empty.")
+        return
+
+    findings = analyze_password(password)
+    recommendations = generate_recommendations(findings)
+
+    print("\nPassword Security Analysis")
+    print(f"Length: {findings['length']} characters")
+    print(f"Character groups used: {findings['character_groups']} of 4")
+    print(f"Common password match: {findings['is_common']}")
+    print(f"Repeated characters detected: {findings['has_repeated_chars']}")
+    print(
+        "Predictable sequence detected: "
+        f"{findings['has_predictable_sequence']}"
+    )
+
+    print("\nRecommendations:")
+    for number, recommendation in enumerate(recommendations, start=1):
+        print(f"{number}. {recommendation}")
+
+    print(
+        "\nNote: These checks are heuristics, not a guarantee "
+        "of password security."
+    )
 
 
 if __name__ == "__main__":
